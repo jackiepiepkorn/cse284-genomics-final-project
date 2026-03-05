@@ -13,6 +13,15 @@ conda install -c bioconda vcftools -y
 conda install -c conda-forge pandas matplotlib seaborn -y
 ```
 
+## PLINK Data
+Download the PLINK data from this repository under data folder
+
+## GERMLINE Data
+Download the GERMLINE data at these links 
+lmk_germline_final.map: https://drive.google.com/file/d/1BA5XkhA280xpmWY1inhdJMVrMOoBeWKD/view?usp=sharing
+lmk_germline_final.ped:
+https://drive.google.com/file/d/1c-HMmaGCIprLfwWvbmbIlsU4--CwE3ey/view?usp=sharing
+
 ## Basic Usage
 ### PLINK
 `plink --bfile ./data/toy_plink --genome --out plink_ibd`
