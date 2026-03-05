@@ -38,7 +38,10 @@ https://drive.google.com/file/d/1c-HMmaGCIprLfwWvbmbIlsU4--CwE3ey/view?usp=shari
  -min_m 2`
 
 ## Results
-We were able to succesfully run PLINK and GERMLINE on the data. Our next step will be comparing runtime and memory usage.
+We have successfully run the PLINK and GERMLINE commands to get the results. This includes the plink genome file and the germline match file. Now that we have compiled these result files we need to work on comparing the 2 metrics. In order to do this we will be working on a python script to extract the data from the 2 files and compare them across a similar ibd metric. This script is still in progress of being made so does not function properly yet.
+
+## Next Steps
+Our next steps are to finalize the comparison script compare_results to see where they vary as well as comparing runtime and memory usage. 
 
 ## Contributors
 
