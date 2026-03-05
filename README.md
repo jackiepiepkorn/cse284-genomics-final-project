@@ -15,7 +15,10 @@ conda install -c conda-forge pandas matplotlib seaborn -y
 
 ## Basic Usage
 
-Show an example of how to use tool. Show running on small test case.
+`./germline-1-5-3/germline \
+ -input ./data/toy_germline.ped ./data/toy_germline.map \
+ -output germline_output \
+ -min_m 2`
 
 ## Results
 
