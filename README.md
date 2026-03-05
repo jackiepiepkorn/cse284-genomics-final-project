@@ -4,12 +4,14 @@ Our project is comparing the runtime and memory usage of PLINK versus GERMLINE. 
 
 ## Install Instructions 
 
-```conda create -n bio_bench python=3.9 -y
+```
+conda create -n bio_bench python=3.9 -y
 conda activate bio_bench 
 conda install -c bioconda plink -y
 conda install -c bioconda bcftools -y
 conda install -c bioconda vcftools -y
-conda install -c conda-forge pandas matplotlib seaborn -y```
+conda install -c conda-forge pandas matplotlib seaborn -y
+```
 
 ## Basic Usage
 
