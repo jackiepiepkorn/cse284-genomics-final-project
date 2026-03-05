@@ -22,6 +22,11 @@ lmk_germline_final.map: https://drive.google.com/file/d/1BA5XkhA280xpmWY1inhdJMV
 lmk_germline_final.ped:
 https://drive.google.com/file/d/1c-HMmaGCIprLfwWvbmbIlsU4--CwE3ey/view?usp=sharing
 
+## Downloading and Running GERMLINE
+1) Download GERMLINE from here: http://gusevlab.org/projects/germline/
+2) Run this `tar -xvzf germline-1-5-3.tar.gz`
+3) Move into GERMLINE directory and run `make` to test that it works
+
 ## Basic Usage
 ### PLINK
 `plink --bfile ./data/toy_plink --genome --out plink_ibd`
@@ -33,6 +38,7 @@ https://drive.google.com/file/d/1c-HMmaGCIprLfwWvbmbIlsU4--CwE3ey/view?usp=shari
  -min_m 2`
 
 ## Results
+We have not gotten a chance to compare runtimes or memory usage yet, but we were able to succesfully run PLINK and GERMLINE on the data
 
 ## Contributors
 
