@@ -14,7 +14,10 @@ conda install -c conda-forge pandas matplotlib seaborn -y
 ```
 
 ## Basic Usage
+### PLINK
+`plink --bfile ./data/toy_plink --genome --out plink_ibd`
 
+### GERMLINE
 `./germline-1-5-3/germline \
  -input ./data/toy_germline.ped ./data/toy_germline.map \
  -output germline_output \
