@@ -38,7 +38,7 @@ https://drive.google.com/file/d/1c-HMmaGCIprLfwWvbmbIlsU4--CwE3ey/view?usp=shari
  -min_m 2`
 
 ## Results
-We have not gotten a chance to compare runtimes or memory usage yet, but we were able to succesfully run PLINK and GERMLINE on the data
+We were able to succesfully run PLINK and GERMLINE on the data. Our next step will be comparing runtime and memory usage.
 
 ## Contributors
 
