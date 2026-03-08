@@ -39,6 +39,7 @@ First convert to VCF:
 This will result in a ps2_ibd.lwk.vcf file that we can use to phase the data as required for GERMLINE processing.
 
 Next, download Beagle at this link: https://faculty.washington.edu/browning/beagle/beagle.html
+
 We then use beagle 5.5 to phase the project. Run the below command:
 ```
 java -jar beagle.jar \
