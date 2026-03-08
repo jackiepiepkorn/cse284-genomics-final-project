@@ -32,10 +32,42 @@ https://drive.google.com/file/d/1c-HMmaGCIprLfwWvbmbIlsU4--CwE3ey/view?usp=shari
 `plink --bfile ./data/toy_plink --genome --out plink_ibd`
 
 ### GERMLINE
-`./germline-1-5-3/germline \
- -input ./data/toy_germline.ped ./data/toy_germline.map \
- -output germline_output \
- -min_m 2`
+Convert ps2_ibd.lwk files to germline format:
+
+First convert to VCF
+plink ```--bfile ps2_ibd.lwk --recode vcf --out ps2_ibd.lwk```
+This will result in a ps2_ibd.lwk.vcf file that we can use to phase the data as required for GERMLINE processing.
+
+We then use beagle 5.5 to phase the project running the below command:
+```
+java -jar beagle.jar \
+gt=ps2_ibd.lwk.vcf \
+out=dataset_phased
+```
+This version of beagle was downloaded at the following link: https://faculty.washington.edu/browning/beagle/beagle.html
+
+This results in the creation of the dataset_phased.vcf.gz file which can then be used for creating the .ped and .map files.
+
+```
+plink \
+  --vcf dataset_phased.vcf.gz \
+  --biallelic-only strict \
+  --geno 0 \
+  --snps-only just-acgt \
+  --keep-allele-order \
+  --recode ped \
+  --out germline_input
+```
+This will output both a germline_input.map file and germline_input.ped file required to run germline.
+
+Run Germline:
+```
+./tools/germline/germline \
+-input ./data/full_samples/full_germline_pruned.ped ./data/full_samples/full_germline_pruned.map \
+-output germline_full_out \
+-min_m 3 \
+-bits 16
+```
 
 ## Results
 We have successfully run the PLINK and GERMLINE commands to get the results. This includes the plink genome file and the germline match file. Now that we have compiled these result files we need to work on comparing the 2 metrics. In order to do this we will be working on a python script to extract the data from the 2 files and compare them across a similar ibd metric. This script is still in progress of being made so does not function properly yet.
@@ -46,5 +78,3 @@ Our next steps are to finalize the comparison script compare_results to see wher
 ## Contributors
 
 This repository was created by Jackie Piepkorn, Hannah Coates, and Jenny Mar for our CSE 284 Final Project.
-
-
