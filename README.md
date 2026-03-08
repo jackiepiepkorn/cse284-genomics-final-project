@@ -13,6 +13,10 @@ conda install -c bioconda vcftools -y
 conda install -c conda-forge pandas matplotlib seaborn -y
 ```
 
+### Windows Users:
+Download PLINK with this command:
+```Invoke-WebRequest -Uri "https://s3.amazonaws.com/plink1-assets/plink_win64_20231018.zip" -OutFile "$env:TEMP\plink.zip"; Expand-Archive -Path "$env:TEMP\plink.zip" -DestinationPath "$env:USERPROFILE\plink" -Force; $env:PATH = "$env:USERPROFILE\plink;$env:PATH"```
+
 ## PLINK Data
 Download the PLINK data from this repository under data folder. These files are toy_plink.*
 
