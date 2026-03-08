@@ -14,7 +14,7 @@ conda install -c conda-forge pandas matplotlib seaborn -y
 ```
 
 ## PLINK Data
-Download the PLINK data from this repository under data folder
+Download the PLINK data from this repository under data folder. These files are toy_plink.*
 
 ## GERMLINE Data
 Download the GERMLINE data at these links 
