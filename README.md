@@ -34,8 +34,8 @@ https://drive.google.com/file/d/1c-HMmaGCIprLfwWvbmbIlsU4--CwE3ey/view?usp=shari
 ### GERMLINE
 Convert ps2_ibd.lwk files to germline format:
 
-First convert to VCF
-plink ```--bfile ps2_ibd.lwk --recode vcf --out ps2_ibd.lwk```
+First convert to VCF:
+```plink --bfile ps2_ibd.lwk --recode vcf --out ps2_ibd.lwk```
 This will result in a ps2_ibd.lwk.vcf file that we can use to phase the data as required for GERMLINE processing.
 
 We then use beagle 5.5 to phase the project running the below command:
