@@ -46,33 +46,20 @@ Next, download Beagle at this link: https://faculty.washington.edu/browning/beag
 
 We then use beagle 5.5 to phase the project. Run the below command:
 ```
-java -jar beagle.jar \
-gt=ps2_ibd.lwk.vcf \
-out=dataset_phased
+java -jar beagle.jar gt=ps2_ibd.lwk.vcf out=dataset_phased
 ```
 You may need to replace `beagle.jar` with the path of the `.jar` file you downloaded
 
 This results in the creation of the dataset_phased.vcf.gz file which can then be used for creating the .ped and .map files.
 
 ```
-plink \
-  --vcf dataset_phased.vcf.gz \
-  --biallelic-only strict \
-  --geno 0 \
-  --snps-only just-acgt \
-  --keep-allele-order \
-  --recode ped \
-  --out germline_input
+plink --vcf dataset_phased.vcf.gz --biallelic-only strict --geno 0 --snps-only just-acgt --keep-allele-order --recode ped --out germline_input
 ```
 This will output both a germline_input.map file and germline_input.ped file required to run germline.
 
 Run Germline:
 ```
-./tools/germline/germline \
--input ./data/full_samples/full_germline_pruned.ped ./data/full_samples/full_germline_pruned.map \
--output germline_full_out \
--min_m 3 \
--bits 16
+./tools/germline/germline -input ./data/full_samples/full_germline_pruned.ped ./data/full_samples/full_germline_pruned.map -output germline_full_out -min_m 3 -bits 16
 ```
 
 ## Results
