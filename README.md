@@ -50,6 +50,7 @@ java -jar beagle.jar \
 gt=ps2_ibd.lwk.vcf \
 out=dataset_phased
 ```
+You may need to replace `beagle.jar` with the path of the `.jar` file you downloaded
 
 This results in the creation of the dataset_phased.vcf.gz file which can then be used for creating the .ped and .map files.
 
