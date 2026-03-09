@@ -42,12 +42,11 @@ plink --bfile ./data/ps2_ibd.lwk --recode vcf --out ps2_ibd.lwk
 ```
 This will result in a ps2_ibd.lwk.vcf file that we can use to phase the data as required for GERMLINE processing.
 
+
 We then use beagle 5.5 to phase the project. Run the below command:
 ```
 java -jar beagle.27Feb25.75f.jar gt=ps2_ibd.lwk.vcf out=dataset_phased
 ```
-You may need to replace `beagle.jar` with the path of the `.jar` file you downloaded
-
 This results in the creation of the dataset_phased.vcf.gz file which can then be used for creating the .ped and .map files.
 
 ```
