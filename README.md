@@ -8,6 +8,7 @@ You will need to run this tutorial in WSL. Download wsl in the terminal and inst
 wsl --install
 wget https://repo.anaconda.com/archive/Anaconda3-2025.12.2-Linux-x86_64.sh
 bash Anaconda3-5.2.0-Linux-x86_64.sh
+source ~/anaconda3/bin/activate
 ```
 You may need to run this command if you get a `bunzip2: command not found` error
 ```
