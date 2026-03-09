@@ -34,7 +34,7 @@ https://drive.google.com/file/d/1c-HMmaGCIprLfwWvbmbIlsU4--CwE3ey/view?usp=shari
 3) Move into GERMLINE directory and run `make` to test that it works
 
 #### ** Windows Users:
-`make` might not work. Just make sure the `germline-1-5-3` folder has `germline-1-5-3/bin/germline` and you are good to go.
+`make` might not work. Just make sure the `germline-1-5-3` folder has `germline-1-5-3/bin/germline`
 
 ## Basic Usage
 ### PLINK
