@@ -35,13 +35,7 @@ git clone https://github.com/jackiepiepkorn/cse284-genomics-final-project.git
 cd cse284-genomics-final-project
 ```
 
-## Basic Usage
-### PLINK
-`plink --bfile ./data/toy_plink --genome --out plink_ibd`
-
-### GERMLINE
-Convert ps2_ibd.lwk files to germline format:
-
+## Convert Given Files to GERMLINE format
 First convert to VCF:
 ```
 plink --bfile ./data/ps2_ibd.lwk --recode vcf --out ps2_ibd.lwk
