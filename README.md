@@ -28,8 +28,12 @@ conda install -c bioconda vcftools -y
 conda install -c conda-forge pandas matplotlib seaborn -y
 ```
 
-## PLINK Data
-Download the PLINK data from this repository under data folder. These files are toy_plink.*
+## Clone this repository
+Run the following command to clone this repository and move into the directory:
+```
+git clone https://github.com/jackiepiepkorn/cse284-genomics-final-project.git
+cd cse284-genomics-final-project
+```
 
 ## Basic Usage
 ### PLINK
