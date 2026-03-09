@@ -2,7 +2,22 @@
 
 Our project is comparing the runtime and memory usage of PLINK versus GERMLINE. To evaluate these results, we are comparing the degree of relatedness between the pairs of genotypes outputted by each method. This comparison is between the pi_hat metric from PLINK and total shared IBD length between pairs from GERMLINE.
 
-## Install Instructions 
+### Windows Users
+You will need to run this tutorial in WSL. Download wsl in the terminal and install conda with these commands:
+```
+wsl --install
+wget https://repo.anaconda.com/archive/Anaconda3-2025.12.2-Linux-x86_64.sh
+bash Anaconda3-5.2.0-Linux-x86_64.sh
+source ~/anaconda3/bin/activate
+sudo apt install default-jre
+```
+You may need to run this command if you get a `bunzip2: command not found` error
+```
+sudo apt update
+sudo apt install bzip2
+```
+
+## Install Instructions
 
 ```
 conda create -n bio_bench python=3.9 -y
@@ -16,17 +31,6 @@ conda install -c conda-forge pandas matplotlib seaborn -y
 ## PLINK Data
 Download the PLINK data from this repository under data folder. These files are toy_plink.*
 
-## GERMLINE Data
-Download the GERMLINE data at these links 
-lmk_germline_final.map: https://drive.google.com/file/d/1BA5XkhA280xpmWY1inhdJMVrMOoBeWKD/view?usp=sharing
-lmk_germline_final.ped:
-https://drive.google.com/file/d/1c-HMmaGCIprLfwWvbmbIlsU4--CwE3ey/view?usp=sharing
-
-## Downloading and Running GERMLINE
-1) Download GERMLINE from here: http://gusevlab.org/projects/germline/
-2) Run this `tar -xvzf germline-1-5-3.tar.gz`
-3) Move into GERMLINE directory and run `make` to test that it works
-
 ## Basic Usage
 ### PLINK
 `plink --bfile ./data/toy_plink --genome --out plink_ibd`
@@ -35,39 +39,31 @@ https://drive.google.com/file/d/1c-HMmaGCIprLfwWvbmbIlsU4--CwE3ey/view?usp=shari
 Convert ps2_ibd.lwk files to germline format:
 
 First convert to VCF:
-```plink --bfile ps2_ibd.lwk --recode vcf --out ps2_ibd.lwk```
+```plink --bfile ./data/ps2_ibd.lwk --recode vcf --out ps2_ibd.lwk```
 This will result in a ps2_ibd.lwk.vcf file that we can use to phase the data as required for GERMLINE processing.
 
 Next, download Beagle at this link: https://faculty.washington.edu/browning/beagle/beagle.html
 
 We then use beagle 5.5 to phase the project. Run the below command:
 ```
-java -jar beagle.jar \
-gt=ps2_ibd.lwk.vcf \
-out=dataset_phased
+java -jar beagle.jar gt=ps2_ibd.lwk.vcf out=dataset_phased
 ```
+You may need to replace `beagle.jar` with the path of the `.jar` file you downloaded
 
 This results in the creation of the dataset_phased.vcf.gz file which can then be used for creating the .ped and .map files.
 
 ```
-plink \
-  --vcf dataset_phased.vcf.gz \
-  --biallelic-only strict \
-  --geno 0 \
-  --snps-only just-acgt \
-  --keep-allele-order \
-  --recode ped \
-  --out germline_input
+plink --vcf dataset_phased.vcf.gz --biallelic-only strict --geno 0 --snps-only just-acgt --keep-allele-order --recode ped --out germline_input
 ```
 This will output both a germline_input.map file and germline_input.ped file required to run germline.
 
 Run Germline:
 ```
-./tools/germline/germline \
--input ./data/full_samples/full_germline_pruned.ped ./data/full_samples/full_germline_pruned.map \
--output germline_full_out \
--min_m 3 \
--bits 16
+./tools/germline/germline -input ./data/full_samples/full_germline_pruned.ped ./data/full_samples/full_germline_pruned.map -output germline_full_out -min_m 3 -bits 16
+```
+**Windows:** 
+```
+path/to/germline-1-5-3/bin/germline -input ./data/full_samples/full_germline_pruned.ped ./data/full_samples/full_germline_pruned.map -output germline_full_out -min_m 3 -bits 16
 ```
 
 ## Results
