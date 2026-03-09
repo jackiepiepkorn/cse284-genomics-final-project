@@ -37,20 +37,6 @@ Invoke-WebRequest -Uri "https://s3.amazonaws.com/plink1-assets/plink_win64_20231
 ## PLINK Data
 Download the PLINK data from this repository under data folder. These files are toy_plink.*
 
-## GERMLINE Data
-Download the GERMLINE data at these links 
-lmk_germline_final.map: https://drive.google.com/file/d/1BA5XkhA280xpmWY1inhdJMVrMOoBeWKD/view?usp=sharing
-lmk_germline_final.ped:
-https://drive.google.com/file/d/1c-HMmaGCIprLfwWvbmbIlsU4--CwE3ey/view?usp=sharing
-
-## Downloading and Running GERMLINE
-1) Download GERMLINE from here: http://gusevlab.org/projects/germline/
-2) Run this `tar -xvzf germline-1-5-3.tar.gz`
-3) Move into GERMLINE directory and run `make` to test that it works
-
-#### ** Windows Users:
-`make` might not work. Just make sure the `germline-1-5-3` folder has `germline-1-5-3/bin/germline`
-
 ## Basic Usage
 ### PLINK
 `plink --bfile ./data/toy_plink --genome --out plink_ibd`
