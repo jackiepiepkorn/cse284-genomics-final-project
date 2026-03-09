@@ -35,6 +35,11 @@ git clone https://github.com/jackiepiepkorn/cse284-genomics-final-project.git
 cd cse284-genomics-final-project
 ```
 
+## Use PLINK
+```
+plink --bfile ./data/ps2_ibd.lwk --genome --out plink_ibd
+```
+
 ## Convert Given Files to GERMLINE format
 First convert to VCF:
 ```
