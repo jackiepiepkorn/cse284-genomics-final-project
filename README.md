@@ -33,6 +33,9 @@ https://drive.google.com/file/d/1c-HMmaGCIprLfwWvbmbIlsU4--CwE3ey/view?usp=shari
 2) Run this `tar -xvzf germline-1-5-3.tar.gz`
 3) Move into GERMLINE directory and run `make` to test that it works
 
+#### ** Windows Users:
+`make` might not work. Just make sure the `germline-1-5-3` folder has `germline-1-5-3/bin/germline` and you are good to go.
+
 ## Basic Usage
 ### PLINK
 `plink --bfile ./data/toy_plink --genome --out plink_ibd`
