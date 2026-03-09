@@ -93,7 +93,7 @@ rm -f germline_bench_out.*
 run_benchmark "GERMLINE" "$GERMLINE_BIN" \
     -input "$GERMLINE_PED" "$GERMLINE_MAP" \
     -output germline_bench_out \
-    -min_m 3 -bits 16
+    -min_m 3
 
 # ============================================================
 # Done
