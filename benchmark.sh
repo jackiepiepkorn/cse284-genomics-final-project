@@ -19,6 +19,7 @@ GERMLINE_BIN="./germline-1-5-3/bin/germline"
 GERMLINE_PED="germline_input.ped"
 GERMLINE_MAP="germline_input.map"
 OUTFILE="benchmark_results.csv"
+NUM_RUNS=3
 
 # Check prerequisites
 if ! command -v plink &>/dev/null; then
@@ -31,13 +32,13 @@ if ! command -v /usr/bin/time &>/dev/null; then
 fi
 
 # ---- helper: run a command and extract time/memory from GNU time ----
+# Appends one row per run to $OUTFILE
 run_benchmark() {
     local label="$1"
     shift
     local timefile
     timefile=$(mktemp)
 
-    echo ">>> Running $label ..."
     /usr/bin/time -v "$@" 2>"$timefile" || true
 
     wall=$(grep "Elapsed (wall clock)" "$timefile" | sed 's/.*: //')
@@ -52,23 +53,26 @@ run_benchmark() {
         else print $1
     }')
 
-    echo "$label,$wall_sec,$user,$sys,$maxrss" >> "$OUTFILE"
+    echo "$label,$i,$wall_sec,$user,$sys,$maxrss" >> "$OUTFILE"
     echo "    Wall: ${wall}  |  User: ${user}s  |  Sys: ${sys}s  |  MaxRSS: ${maxrss} KB"
 
     rm -f "$timefile"
 }
 
-# ---- initialise results file ----
-echo "tool,wall_seconds,user_seconds,sys_seconds,max_rss_kb" > "$OUTFILE"
+# ---- initialise results file (one row per run) ----
+echo "tool,run,wall_seconds,user_seconds,sys_seconds,max_rss_kb" > "$OUTFILE"
 
 # ============================================================
-# 1. PLINK IBD
+# 1. PLINK IBD  (run NUM_RUNS times)
 # ============================================================
-rm -f plink_bench_ibd.*
-run_benchmark "PLINK" plink --bfile "$INPUT_BED" --genome --out plink_bench_ibd
+for i in $(seq 1 $NUM_RUNS); do
+    echo ">>> PLINK run $i/$NUM_RUNS ..."
+    rm -f plink_bench_ibd.*
+    run_benchmark "PLINK" plink --bfile "$INPUT_BED" --genome --out plink_bench_ibd
+done
 
 # ============================================================
-# 2. GERMLINE IBD
+# 2. GERMLINE IBD  (run NUM_RUNS times)
 # ============================================================
 # Check that the GERMLINE input files exist
 if [[ ! -f "$GERMLINE_PED" || ! -f "$GERMLINE_MAP" ]]; then
@@ -90,10 +94,14 @@ if [[ ! -f "$GERMLINE_PED" || ! -f "$GERMLINE_MAP" ]]; then
 fi
 
 rm -f germline_bench_out.*
-run_benchmark "GERMLINE" "$GERMLINE_BIN" \
-    -input "$GERMLINE_PED" "$GERMLINE_MAP" \
-    -output germline_bench_out \
-    -min_m 3
+for i in $(seq 1 $NUM_RUNS); do
+    echo ">>> GERMLINE run $i/$NUM_RUNS ..."
+    rm -f germline_bench_out.*
+    run_benchmark "GERMLINE" "$GERMLINE_BIN" \
+        -input "$GERMLINE_PED" "$GERMLINE_MAP" \
+        -output germline_bench_out \
+        -min_m 3
+done
 
 # ============================================================
 # Done
