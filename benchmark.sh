@@ -53,7 +53,7 @@ run_benchmark() {
         else print $1
     }')
 
-    echo "$label,$i,$wall_sec,$user,$sys,$maxrss" >> "$OUTFILE"
+    echo "$label,$RUN_NUM,$wall_sec,$user,$sys,$maxrss" >> "$OUTFILE"
     echo "    Wall: ${wall}  |  User: ${user}s  |  Sys: ${sys}s  |  MaxRSS: ${maxrss} KB"
 
     rm -f "$timefile"
@@ -65,8 +65,8 @@ echo "tool,run,wall_seconds,user_seconds,sys_seconds,max_rss_kb" > "$OUTFILE"
 # ============================================================
 # 1. PLINK IBD  (run NUM_RUNS times)
 # ============================================================
-for i in $(seq 1 $NUM_RUNS); do
-    echo ">>> PLINK run $i/$NUM_RUNS ..."
+for RUN_NUM in $(seq 1 $NUM_RUNS); do
+    echo ">>> PLINK run $RUN_NUM/$NUM_RUNS ..."
     rm -f plink_bench_ibd.*
     run_benchmark "PLINK" plink --bfile "$INPUT_BED" --genome --out plink_bench_ibd
 done
@@ -94,8 +94,8 @@ if [[ ! -f "$GERMLINE_PED" || ! -f "$GERMLINE_MAP" ]]; then
 fi
 
 rm -f germline_bench_out.*
-for i in $(seq 1 $NUM_RUNS); do
-    echo ">>> GERMLINE run $i/$NUM_RUNS ..."
+for RUN_NUM in $(seq 1 $NUM_RUNS); do
+    echo ">>> GERMLINE run $RUN_NUM/$NUM_RUNS ..."
     rm -f germline_bench_out.*
     run_benchmark "GERMLINE" "$GERMLINE_BIN" \
         -input "$GERMLINE_PED" "$GERMLINE_MAP" \
