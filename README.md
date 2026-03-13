@@ -27,6 +27,10 @@ conda install -c bioconda bcftools -y
 conda install -c bioconda vcftools -y
 conda install -c conda-forge pandas matplotlib seaborn -y
 ```
+If you are in WSL, you may need to activate the conda environment by:
+```
+/home/*user*/anaconda3/envs/bio_bench
+```
 
 ## Clone this repository
 Run the following command to clone this repository and move into the directory:
@@ -61,7 +65,7 @@ This will output both a germline_input.map file and germline_input.ped file requ
 
 Run Germline:
 ```
-./germline-1-5-3/bin/germline -input germline_input.ped germline_input.map -output germline_full_out -min_m 3 -bits 16
+./germline-1-5-3/bin/germline -input germline_input.ped germline_input.map -output germline_full_out -min_m 3
 ```
 
 ## Results
