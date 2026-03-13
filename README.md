@@ -61,7 +61,7 @@ This will output both a germline_input.map file and germline_input.ped file requ
 
 Run Germline:
 ```
-./germline-1-5-3/bin/germline -input germline_input.ped germline_input.map -output germline_full_out -min_m 3 -bits 16
+./germline-1-5-3/bin/germline -input germline_input.ped germline_input.map -output germline_full_out -min_m 3
 ```
 
 ## Results
