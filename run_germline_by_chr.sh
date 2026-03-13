@@ -3,7 +3,7 @@
 # Usage: bash run_germline_by_chr.sh
 
 PED="germline_input.ped"
-MAP="germline_input.map"
+MAP="germline_input_cm.map"
 GERMLINE="./germline-1-5-3/bin/germline"
 OUTDIR="germline_chr_results"
 FINAL_OUTPUT="germline_full_out_cm.match"
@@ -31,7 +31,7 @@ echo "=== Splitting PED file by chromosome ==="
 python3 << 'PYEOF'
 import sys
 
-map_file = "germline_input.map"
+map_file = "germline_input_cm.map"
 ped_file = "germline_input.ped"
 outdir = "germline_chr_results"
 
