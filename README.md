@@ -26,6 +26,7 @@ conda install -c bioconda plink -y
 conda install -c bioconda bcftools -y
 conda install -c bioconda vcftools -y
 conda install -c conda-forge pandas matplotlib seaborn -y
+conda install numpy
 ```
 If you are in WSL, you may need to activate the conda environment by:
 ```
