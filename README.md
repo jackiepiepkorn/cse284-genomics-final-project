@@ -68,6 +68,7 @@ Run Germline:
 ```
 ./germline-1-5-3/bin/germline -input germline_input.ped germline_input.map -output germline_full_out -min_m 3
 ```
+If you get repeated segmentation fault errors, you can try adding `-bits 16` to the end.
 
 ## Results
 We have successfully run the PLINK and GERMLINE commands to get the results. This includes the plink genome file and the germline match file. Now that we have compiled these result files we need to work on comparing the 2 metrics. In order to do this we will be working on a python script to extract the data from the 2 files and compare them across a similar ibd metric. This script is still in progress of being made so does not function properly yet.
