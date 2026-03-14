@@ -70,6 +70,19 @@ Run Germline:
 ```
 If you get repeated segmentation fault errors, you can try adding `-bits 16` to the end.
 
+Interpolate the GERMLINE .map file:
+```
+wget https://bochet.gcc.biostat.washington.edu/beagle/genetic_maps/plink.GRCh37.map.zip
+unzip plink.GRCh37.map.zip -d genetic_maps/
+
+python interpolate_cm.py germline_input.map genetic_maps/ germline_input_cm.map
+```
+
+Run GERMLINE on each chromosome:
+```
+bash run_chr.sh
+```
+
 ## Results
 We analyzed the relatedness of genome pairs with PLINK and GERMLINE and compared their runtimes and memory usage. For comparing relative finding, we first parsed the match file containing the detected IBD segment matches, which was the output from running GERMLINE. We then merged overlapping segments per pair and chromosome, ensuring that any overlapping portions across the matches were not double counted. As some sections appeared across multiple matches. The segment lengths were then summed to compute total shared segments per pair. For PLINK postprocessing, we parsed the .genome output file and extracted PI_HAT, which represents pairwise relatedness. To compare these two output files, we merged the two dataframes on their pair_ids and graphed a scatter plot. We also calculated the Pearson correlation coefficient and p-value to further analyze the statistical significance of this comparison, using pearsonr from SciPy.stats.
 
