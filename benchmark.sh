@@ -1,20 +1,6 @@
 #!/bin/bash
-# ============================================================
-# benchmark.sh — Runtime & Memory Benchmark: PLINK vs GERMLINE
-# ============================================================
-# Usage (run from WSL inside the project directory):
-#   conda activate bio_bench
-#   bash benchmark.sh
-#
-# Requires: /usr/bin/time (GNU time, not shell builtin)
-#   Install if missing:  sudo apt install time
-#
-# GERMLINE is benchmarked per-chromosome (matching the actual
-# workflow in run_chr.sh).  Wall time = sum across chromosomes,
-# peak RSS = max across chromosomes.
-#
-# Output: benchmark_results.csv  (consumed by the notebook)
-# ============================================================
+# Runtime & Memory Benchmark: PLINK vs GERMLINE
+# This script outputs benchmark_results.csv
 
 set -euo pipefail
 
@@ -24,12 +10,11 @@ GERMLINE_PED="germline_input.ped"
 GERMLINE_MAP="germline_input_cm.map"
 OUTFILE="benchmark_results.csv"
 NUM_RUNS=3
-
 BENCH_CHR_DIR="germline_bench_chr"
 MIN_M=3
 BITS=64
 
-# Check prerequisites
+# Ensure plink and GNU time exist
 if ! command -v plink &>/dev/null; then
     echo "ERROR: plink not found. Activate bio_bench conda environment first."
     exit 1
@@ -39,7 +24,7 @@ if ! command -v /usr/bin/time &>/dev/null; then
     exit 1
 fi
 
-# ---- helper: run a single command, extract time/memory from GNU time ----
+# run a single command, extract time/memory from GNU time
 # Appends one row per run to $OUTFILE
 run_benchmark() {
     local label="$1"
@@ -54,7 +39,7 @@ run_benchmark() {
     sys=$(grep "System time"           "$timefile" | head -1 | awk '{print $NF}')
     maxrss=$(grep "Maximum resident"   "$timefile" | awk '{print $NF}')   # in KB
 
-    # Convert wall clock (h:mm:ss or m:ss.ss) to seconds
+    # Convert wall clock to seconds
     wall_sec=$(echo "$wall" | awk -F: '{
         if (NF==3) print $1*3600 + $2*60 + $3;
         else if (NF==2) print $1*60 + $2;
@@ -67,7 +52,7 @@ run_benchmark() {
     rm -f "$timefile"
 }
 
-# ---- helper: parse GNU time -v output from a file ----
+# parse GNU time -v output
 parse_time_file() {
     local timefile="$1"
     local wall user_t sys_t maxrss wall_sec
@@ -86,22 +71,17 @@ parse_time_file() {
     echo "$wall_sec $user_t $sys_t $maxrss"
 }
 
-# ---- initialise results file (one row per run) ----
+# init results file
 echo "tool,run,wall_seconds,user_seconds,sys_seconds,max_rss_kb" > "$OUTFILE"
 
-# ============================================================
-# 1. PLINK IBD  (run NUM_RUNS times)
-# ============================================================
+# PLINK IBD - (run NUM_RUNS times)
 for RUN_NUM in $(seq 1 $NUM_RUNS); do
     echo ">>> PLINK run $RUN_NUM/$NUM_RUNS ..."
     rm -f plink_bench_ibd.*
     run_benchmark "PLINK" plink --bfile "$INPUT_BED" --genome --out plink_bench_ibd
 done
 
-# ============================================================
-# 2. GERMLINE IBD — per-chromosome  (run NUM_RUNS times)
-# ============================================================
-# Check that the GERMLINE input files exist
+# GERMLINE IBD — per-chromosome  (run NUM_RUNS times)
 if [[ ! -f "$GERMLINE_PED" || ! -f "$GERMLINE_MAP" ]]; then
     echo ""
     echo "GERMLINE input files not found ($GERMLINE_PED / $GERMLINE_MAP)."
@@ -120,13 +100,11 @@ if [[ ! -f "$GERMLINE_PED" || ! -f "$GERMLINE_MAP" ]]; then
           --out germline_input 2>/dev/null
 fi
 
-# ---- Split map + PED by chromosome (prep — NOT timed) ----
+# Split map + PED by chromosome (not part of runtime)
 mkdir -p "$BENCH_CHR_DIR"
-
 CHROMS=$(cut -f1 "$GERMLINE_MAP" | sort -un)
 echo ""
 echo "=== Splitting input files by chromosome (not timed) ==="
-
 for CHR in $CHROMS; do
     awk -v c="$CHR" '$1 == c' "$GERMLINE_MAP" > "$BENCH_CHR_DIR/chr${CHR}.map"
 done
@@ -158,7 +136,7 @@ PYEOF
 
 echo "Split done."
 
-# ---- Benchmark: run all chromosomes, sum wall time, max RSS ----
+# Benchmark: run all chr, sum wall time, max RSS
 for RUN_NUM in $(seq 1 $NUM_RUNS); do
     echo ""
     echo ">>> GERMLINE (per-chr) run $RUN_NUM/$NUM_RUNS ..."
@@ -196,9 +174,7 @@ for RUN_NUM in $(seq 1 $NUM_RUNS); do
     echo "  TOTAL  Wall: ${total_wall}s  |  User: ${total_user}s  |  Sys: ${total_sys}s  |  Peak RSS: ${peak_rss} KB"
 done
 
-# ============================================================
 # Done
-# ============================================================
 echo ""
 echo "=== Benchmark Results ==="
 column -t -s',' "$OUTFILE"

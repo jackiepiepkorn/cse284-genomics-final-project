@@ -1,6 +1,5 @@
 #!/bin/bash
 set -o pipefail
-cd /home/jpiepkorn/cse284-genomics-final-project
 
 MAP_FILE="germline_input_cm.map"
 PED_FILE="germline_input.ped"
@@ -9,15 +8,14 @@ FINAL_OUTPUT="germline_full_out.match"
 
 mkdir -p "$OUTDIR"
 
-# === Split map by chromosome ===
-echo "Splitting map file: $MAP_FILE"
+# Split map and ped by chr
+echo "Splitting map file"
 for CHR in $(cut -f1 "$MAP_FILE" | sort -un); do
   awk -v c="$CHR" '$1 == c' "$MAP_FILE" > "$OUTDIR/chr$CHR.map"
 done
 echo "Map split done"
 
-# === Split PED by chromosome ===
-echo "Splitting PED file..."
+echo "Splitting PED file"
 python3 - "$MAP_FILE" "$PED_FILE" "$OUTDIR" << 'PYEOF'
 import sys
 map_file, ped_file, outdir = sys.argv[1], sys.argv[2], sys.argv[3]
@@ -44,9 +42,9 @@ for c in sorted(chr_indices, key=int):
 PYEOF
 echo "PED split done"
 
-# === Run GERMLINE per chromosome ===
+# Run GERMLINE per chr
 echo ""
-echo "=== Running GERMLINE per chromosome ==="
+echo "=== Run GERMLINE per chr ==="
 > "$FINAL_OUTPUT"
 for CHR in $(cut -f1 "$MAP_FILE" | sort -un); do
   echo "chr$CHR:"
@@ -60,5 +58,3 @@ for CHR in $(cut -f1 "$MAP_FILE" | sort -un); do
 done
 echo "TOTAL:"
 wc -l "$FINAL_OUTPUT"
-cp "$FINAL_OUTPUT" "/mnt/c/Users/jpiepkorn/cse284-genomics-final-project/$FINAL_OUTPUT"
-echo "Copied to Windows"
