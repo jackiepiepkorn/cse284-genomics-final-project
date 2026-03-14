@@ -1,21 +1,4 @@
 #!/usr/bin/env python3
-"""
-Interpolate centimorgan (cM) genetic distances into a PLINK .map file
-using a reference genetic map (e.g., HapMap / 1000 Genomes recombination map).
-
-Usage:
-    python interpolate_cm.py <input.map> <genetic_map_dir> <output.map>
-
-Arguments:
-    input.map        - Your current map file with 0s in the cM column
-    genetic_map_dir  - Directory containing plink.chrN.GRCh37.map files
-    output.map       - Output map file with interpolated cM values
-
-The genetic map files should be named like:
-    plink.chr1.GRCh37.map, plink.chr2.GRCh37.map, ...
-Each with columns: chr  rsID  cM  bp
-"""
-
 import sys
 import os
 import numpy as np
@@ -23,11 +6,9 @@ from collections import defaultdict
 
 
 def load_genetic_map(map_dir):
-    """Load reference genetic map files into a dict keyed by chromosome."""
     genetic_map = {}
 
-    for chrom in range(1, 23):  # chromosomes 1-22
-        # Try common naming patterns
+    for chrom in range(1, 23):
         candidates = [
             os.path.join(map_dir, f"plink.chr{chrom}.GRCh37.map"),
             os.path.join(map_dir, f"chr{chrom}.map"),
@@ -42,7 +23,6 @@ def load_genetic_map(map_dir):
                 break
 
         if filepath is None:
-            print(f"  WARNING: No genetic map found for chr{chrom}, skipping")
             continue
 
         positions = []
@@ -54,20 +34,14 @@ def load_genetic_map(map_dir):
                 if not line or line.startswith("#"):
                     continue
                 parts = line.split()
-
-                # Handle different formats:
-                # Format 1 (plink map): chr rsID cM bp
-                # Format 2 (HapMap):    chr position rate(cM/Mb) cM
                 if len(parts) >= 4:
                     try:
-                        # Try plink map format: chr rsID cM bp
                         bp = int(parts[3])
                         cm = float(parts[2])
                         positions.append(bp)
                         cm_values.append(cm)
                     except (ValueError, IndexError):
                         try:
-                            # Try HapMap format: chr position rate cM
                             bp = int(parts[1])
                             cm = float(parts[3])
                             positions.append(bp)
@@ -75,7 +49,6 @@ def load_genetic_map(map_dir):
                         except (ValueError, IndexError):
                             continue
                 elif len(parts) == 3:
-                    # Minimal format: position rate cM  or  position cM rate
                     try:
                         bp = int(parts[0])
                         cm = float(parts[2])
@@ -85,7 +58,6 @@ def load_genetic_map(map_dir):
                         continue
 
         if positions:
-            # Sort by position
             order = np.argsort(positions)
             genetic_map[str(chrom)] = {
                 "positions": np.array(positions)[order],
@@ -99,18 +71,14 @@ def load_genetic_map(map_dir):
 
 
 def interpolate_cm(bp, ref_positions, ref_cm):
-    """Interpolate cM value for a given bp position using the reference map."""
     if bp <= ref_positions[0]:
         return ref_cm[0]
     if bp >= ref_positions[-1]:
         return ref_cm[-1]
-
-    # Binary search / numpy interpolation
     return float(np.interp(bp, ref_positions, ref_cm))
 
 
 def process_map_file(input_map, genetic_map, output_map):
-    """Read input map, interpolate cM values, write output map."""
     total = 0
     interpolated = 0
     missing_chr = 0
@@ -120,13 +88,11 @@ def process_map_file(input_map, genetic_map, output_map):
             line = line.strip()
             if not line:
                 continue
-
             parts = line.split()
             # Map format: chr  rsID  cM  bp
             chrom = parts[0]
             rsid = parts[1]
             bp = int(parts[3])
-
             total += 1
 
             if chrom in genetic_map:
@@ -180,8 +146,6 @@ def main():
     print(f"\nLoaded genetic maps for {len(genetic_map)} chromosomes")
     print("\nInterpolating cM values...")
     process_map_file(input_map, genetic_map, output_map)
-
-    # Quick sanity check
     print("\nSanity check (first 5 lines of output):")
     with open(output_map) as f:
         for i, line in enumerate(f):
