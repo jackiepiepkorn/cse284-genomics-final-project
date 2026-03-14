@@ -85,7 +85,7 @@ bash benchmark.sh
 This should output a file named `benchmark_results.csv`
 
 ## Running the Compare Results Notebook
-Run all the cells in the compare_results.ipynb notebook to compare the two commands and create figures on the output of the commands, and their resource usage.
+Run all the cells in the compare_results.ipynb notebook to compare the two commands. This will create figures on the output of the commands and their respective resource usage.
 
 ## Results
 We analyzed the relatedness of genome pairs with PLINK and GERMLINE and compared their runtimes and memory usage. For comparing relative finding, we first parsed the match file containing the detected IBD segment matches, which was the output from running GERMLINE. We then merged overlapping segments per pair and chromosome, ensuring that any overlapping portions across the matches were not double counted. As some sections appeared across multiple matches. The segment lengths were then summed to compute total shared segments per pair. For PLINK postprocessing, we parsed the .genome output file and extracted PI_HAT, which represents pairwise relatedness. To compare these two output files, we merged the two dataframes on their pair_ids and graphed a scatter plot. We also calculated the Pearson correlation coefficient and p-value to further analyze the statistical significance of this comparison, using pearsonr from SciPy.stats.
