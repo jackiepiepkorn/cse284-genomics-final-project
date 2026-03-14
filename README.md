@@ -76,11 +76,13 @@ Run GERMLINE on each chromosome:
 ```
 bash run_chr.sh
 ```
+This should output a file named `germline_full_out.match`
 
 ## Running the Benchmarking Script
 ```
 bash benchmark.sh
 ```
+This should output a file named `benchmark_results.csv`
 
 ## Running the Compare Results Notebook
 Run all the cells in the compare_results.ipynb notebook to compare the two commands and create figures on the output of the commands, and their resource usage.
