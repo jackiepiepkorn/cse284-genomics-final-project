@@ -1,6 +1,4 @@
 #!/bin/bash
-# Runtime & Memory Benchmark: PLINK vs GERMLINE
-# This script outputs benchmark_results.csv
 
 set -euo pipefail
 
@@ -34,9 +32,8 @@ run_benchmark() {
     wall=$(grep "Elapsed (wall clock)" "$timefile" | sed 's/.*: //')
     user=$(grep "User time"            "$timefile" | head -1 | awk '{print $NF}')
     sys=$(grep "System time"           "$timefile" | head -1 | awk '{print $NF}')
-    maxrss=$(grep "Maximum resident"   "$timefile" | awk '{print $NF}')   # in KB
+    maxrss=$(grep "Maximum resident"   "$timefile" | awk '{print $NF}') 
 
-    # Convert wall clock to seconds
     wall_sec=$(echo "$wall" | awk -F: '{
         if (NF==3) print $1*3600 + $2*60 + $3;
         else if (NF==2) print $1*60 + $2;
@@ -49,7 +46,6 @@ run_benchmark() {
     rm -f "$timefile"
 }
 
-# parse GNU time -v output
 parse_time_file() {
     local timefile="$1"
     local wall user_t sys_t maxrss wall_sec
@@ -68,17 +64,14 @@ parse_time_file() {
     echo "$wall_sec $user_t $sys_t $maxrss"
 }
 
-# init results file
 echo "tool,run,wall_seconds,user_seconds,sys_seconds,max_rss_kb" > "$OUTFILE"
 
-# PLINK IBD - (run NUM_RUNS times)
 for RUN_NUM in $(seq 1 $NUM_RUNS); do
     echo ">>> PLINK run $RUN_NUM/$NUM_RUNS ..."
     rm -f plink_bench_ibd.*
     run_benchmark "PLINK" plink --bfile "$INPUT_BED" --genome --out plink_bench_ibd
 done
 
-# GERMLINE IBD — per-chromosome  (run NUM_RUNS times)
 if [[ ! -f "$GERMLINE_PED" || ! -f "$GERMLINE_MAP" ]]; then
     echo ""
     echo "GERMLINE input files not found ($GERMLINE_PED / $GERMLINE_MAP)."
@@ -97,7 +90,6 @@ if [[ ! -f "$GERMLINE_PED" || ! -f "$GERMLINE_MAP" ]]; then
           --out germline_input 2>/dev/null
 fi
 
-# Split map + PED by chromosome (not part of runtime)
 mkdir -p "$BENCH_CHR_DIR"
 CHROMS=$(cut -f1 "$GERMLINE_MAP" | sort -un)
 echo ""
@@ -133,7 +125,6 @@ PYEOF
 
 echo "Split done."
 
-# Benchmark: run all chr, sum wall time, max RSS
 for RUN_NUM in $(seq 1 $NUM_RUNS); do
     echo ""
     echo ">>> GERMLINE (per-chr) run $RUN_NUM/$NUM_RUNS ..."
@@ -159,7 +150,6 @@ for RUN_NUM in $(seq 1 $NUM_RUNS); do
         total_wall=$(echo "$total_wall + $w" | bc)
         total_user=$(echo "$total_user + $u" | bc)
         total_sys=$(echo "$total_sys + $s" | bc)
-        # Peak RSS = max across chromosomes (each chr runs separately)
         if [ "$(echo "$r > $peak_rss" | bc)" -eq 1 ]; then
             peak_rss=$r
         fi
@@ -171,7 +161,6 @@ for RUN_NUM in $(seq 1 $NUM_RUNS); do
     echo "  TOTAL  Wall: ${total_wall}s  |  User: ${total_user}s  |  Sys: ${total_sys}s  |  Peak RSS: ${peak_rss} KB"
 done
 
-# Done
 echo ""
 echo "=== Benchmark Results ==="
 column -t -s',' "$OUTFILE"

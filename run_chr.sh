@@ -8,7 +8,6 @@ FINAL_OUTPUT="germline_full_out.match"
 
 mkdir -p "$OUTDIR"
 
-# Split map and ped by chr
 echo "Splitting map file"
 for CHR in $(cut -f1 "$MAP_FILE" | sort -un); do
   awk -v c="$CHR" '$1 == c' "$MAP_FILE" > "$OUTDIR/chr$CHR.map"
@@ -42,7 +41,6 @@ for c in sorted(chr_indices, key=int):
 PYEOF
 echo "PED split done"
 
-# Run GERMLINE per chr
 echo ""
 echo "=== Run GERMLINE per chr ==="
 > "$FINAL_OUTPUT"
