@@ -14,7 +14,6 @@ BENCH_CHR_DIR="germline_bench_chr"
 MIN_M=3
 BITS=64
 
-# Ensure plink and GNU time exist
 if ! command -v plink &>/dev/null; then
     echo "ERROR: plink not found. Activate bio_bench conda environment first."
     exit 1
@@ -24,8 +23,6 @@ if ! command -v /usr/bin/time &>/dev/null; then
     exit 1
 fi
 
-# run a single command, extract time/memory from GNU time
-# Appends one row per run to $OUTFILE
 run_benchmark() {
     local label="$1"
     shift
