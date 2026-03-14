@@ -71,7 +71,9 @@ Run Germline:
 If you get repeated segmentation fault errors, you can try adding `-bits 16` to the end.
 
 ## Results
-We have successfully run the PLINK and GERMLINE commands to get the results. This includes the plink genome file and the germline match file. Now that we have compiled these result files we need to work on comparing the 2 metrics. In order to do this we will be working on a python script to extract the data from the 2 files and compare them across a similar ibd metric. This script is still in progress of being made so does not function properly yet.
+We analyzed the relatedness of genome pairs with PLINK and GERMLINE and compared their runtimes and memory usage. For comparing relative finding, we first parsed the match file containing the detected IBD segment matches, which was the output from running GERMLINE. We then merged overlapping segments per pair and chromosome, ensuring that any overlapping portions across the matches were not double counted. As some sections appeared across multiple matches. The segment lengths were then summed to compute total shared segments per pair. For PLINK postprocessing, we parsed the .genome output file and extracted PI_HAT, which represents pairwise relatedness. To compare these two output files, we merged the two dataframes on their pair_ids and graphed a scatter plot. We also calculated the Pearson correlation coefficient and p-value to further analyze the statistical significance of this comparison, using pearsonr from SciPy.stats.
+
+In order to analyze the runtime and memory usage of PLINK versus GERMLINE, we created a benchmark script to run commands that extract time and memory from GNU time. For runtime, we evaluated based on wall clock time, user time, and system time. We evaluated based on the maximum resident set size for analyzing memory usage. We ran the runtime and memory commands three times and took the mean, in order to account for variance.
 
 ## Next Steps
 Our next steps are to finalize the comparison script compare_results to see where they vary as well as comparing runtime and memory usage. 
