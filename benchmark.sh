@@ -92,6 +92,17 @@ fi
 
 mkdir -p "$BENCH_CHR_DIR"
 CHROMS=$(cut -f1 "$GERMLINE_MAP" | sort -un)
+
+for RUN_NUM in $(seq 1 $NUM_RUNS); do
+    echo ""
+    echo ">>> GERMLINE run $RUN_NUM/$NUM_RUNS ..."
+    rm -f germline_bench_out.*
+    run_benchmark "GERMLINE" "$GERMLINE_BIN" \
+        -input "$GERMLINE_PED" "$GERMLINE_MAP" \
+        -output germline_bench_out \
+        -min_m "$MIN_M"
+done
+
 echo ""
 echo "=== Splitting input files by chromosome (not timed) ==="
 for CHR in $CHROMS; do
@@ -151,13 +162,13 @@ for RUN_NUM in $(seq 1 $NUM_RUNS); do
         total_user=$(echo "$total_user + $u" | bc)
         total_sys=$(echo "$total_sys + $s" | bc)
         if [ "$(echo "$r > $peak_rss" | bc)" -eq 1 ]; then
-            peak_rss=$r
+            peak_rss=$
         fi
 
         rm -f "$timefile"
     done
 
-    echo "GERMLINE,$RUN_NUM,$total_wall,$total_user,$total_sys,$peak_rss" >> "$OUTFILE"
+    echo "GERMLINE_perchr,$RUN_NUM,$total_wall,$total_user,$total_sys,$peak_rss" >> "$OUTFILE"
     echo "  TOTAL  Wall: ${total_wall}s  |  User: ${total_user}s  |  Sys: ${total_sys}s  |  Peak RSS: ${peak_rss} KB"
 done
 
