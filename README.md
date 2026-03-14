@@ -64,12 +64,6 @@ plink --vcf dataset_phased.vcf.gz --biallelic-only strict --geno 0 --snps-only j
 ```
 This will output both a germline_input.map file and germline_input.ped file required to run germline.
 
-Run Germline:
-```
-./germline-1-5-3/bin/germline -input germline_input.ped germline_input.map -output germline_full_out -min_m 3
-```
-If you get repeated segmentation fault errors, you can try adding `-bits 16` to the end.
-
 Interpolate the GERMLINE .map file:
 ```
 wget https://bochet.gcc.biostat.washington.edu/beagle/genetic_maps/plink.GRCh37.map.zip
@@ -83,13 +77,18 @@ Run GERMLINE on each chromosome:
 bash run_chr.sh
 ```
 
+## Running the Benchmarking Script
+```
+bash benchmark.sh
+```
+
 ## Results
 We analyzed the relatedness of genome pairs with PLINK and GERMLINE and compared their runtimes and memory usage. For comparing relative finding, we first parsed the match file containing the detected IBD segment matches, which was the output from running GERMLINE. We then merged overlapping segments per pair and chromosome, ensuring that any overlapping portions across the matches were not double counted. As some sections appeared across multiple matches. The segment lengths were then summed to compute total shared segments per pair. For PLINK postprocessing, we parsed the .genome output file and extracted PI_HAT, which represents pairwise relatedness. To compare these two output files, we merged the two dataframes on their pair_ids and graphed a scatter plot. We also calculated the Pearson correlation coefficient and p-value to further analyze the statistical significance of this comparison, using pearsonr from SciPy.stats.
 
 In order to analyze the runtime and memory usage of PLINK versus GERMLINE, we created a benchmark script to run commands that extract time and memory from GNU time. For runtime, we evaluated based on wall clock time, user time, and system time. We evaluated based on the maximum resident set size for analyzing memory usage. We ran the runtime and memory commands three times and took the mean, in order to account for variance.
 
 ## Next Steps
-Our next steps are to finalize the comparison script compare_results to see where they vary as well as comparing runtime and memory usage. 
+One potential future direction is testing PLINK and GERMLINE on a different dataset that have varying demographic histories. It could be very interesting to test on populations with recent admixture or those with bottleneck events. This would help us analyze the strengths and weaknesses of each command on various types of data and allow us to see how it performs in different contexts. Another future direction is developing more documentation on comparing PLINK and GERMLINE. Because it would have been helpful to us to have more information on how to postprocess the GERMLINE output to compare the two, as well as how to use the commands on both Mac and Windows machines, we could develop documentation on this information.
 
 ## Contributors
 
